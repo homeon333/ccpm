@@ -767,10 +767,7 @@
 					Schedule your complimentary consultation and discover how Home On can bring your vision to life with our faith-driven approach to excellence.
 				</p>
 				<div class="contact-form-container">
-					<form name="home-remodeling-leads" method="POST" action="https://formspree.io/f/mwpkpbkn" class="multi-step-form">
-						<input type="hidden" name="_subject" value="New Remodeling Lead from Raleigh Landing Page">
-						<input type="hidden" name="_next" value="https://homeon.online/raleigh?success=true">
-						<input type="hidden" name="_replyto" value="info@homeonpro.com">
+					<form name="home-remodeling-leads" class="multi-step-form" onsubmit="submitForm(event)">
 						<input type="hidden" name="form-name" value="home-remodeling-leads">
 
 						<!-- Step 1: Project Details -->
@@ -1009,6 +1006,77 @@
 			// Make function globally available
 			window.nextStep = nextStep;
 			console.log('nextStep function defined globally');
+
+			function submitForm(event) {
+				event.preventDefault();
+				console.log('Form submission started');
+
+				// Get form data
+				const form = event.target;
+				const formData = new FormData(form);
+
+				// Extract all form values
+				const projectType = formData.get('project-type');
+				const timeline = formData.get('timeline');
+				const name = formData.get('name');
+				const email = formData.get('email');
+				const phone = formData.get('phone');
+				const address = formData.get('address');
+				const budget = formData.get('budget');
+				const details = formData.get('details') || 'No additional details provided';
+
+				// Create email content
+				const subject = encodeURIComponent('New Remodeling Lead from Raleigh Landing Page');
+				const body = encodeURIComponent(`
+New Home Remodeling Lead:
+
+Project Type: ${projectType}
+Timeline: ${timeline}
+Budget Range: ${budget}
+
+Contact Information:
+Name: ${name}
+Email: ${email}
+Phone: ${phone}
+Address: ${address}
+
+Project Details:
+${details}
+
+Lead Source: Raleigh Landing Page
+Submitted: ${new Date().toLocaleString()}
+				`);
+
+				// Create mailto link
+				const mailtoLink = `mailto:info@homeonpro.com?subject=${subject}&body=${body}`;
+
+				// Track form submission
+				try {
+					if (typeof gtag !== 'undefined') {
+						gtag('event', 'form_submitted', {
+							event_category: 'Lead Generation',
+							event_label: 'Contact Form Completed',
+							value: 1
+						});
+					}
+				} catch (e) {
+					console.log('GA4 tracking error:', e);
+				}
+
+				// Open email client
+				window.location.href = mailtoLink;
+
+				// Show success message
+				setTimeout(function() {
+					alert('Thank you! Your email client should open with the lead details. Please send the email to complete your request.');
+					window.location.href = 'https://homeon.online/raleigh?success=true';
+				}, 1000);
+
+				return false;
+			}
+
+			// Make submitForm globally available
+			window.submitForm = submitForm;
 
 			function prevStep() {
 				// Hide step 2 and show step 1
