@@ -668,7 +668,7 @@
 				<h1>Luxury Home<br>Remodeling</h1>
 				<div class="subtitle">Raleigh's Premier Remodeling Contractor</div>
 				<div class="tagline">Kitchen • Bathroom • Whole Home Transformations</div>
-				<a href="#contact" class="cta-button">Start Your Project</a>
+				<a href="#form-start" class="cta-button">Start Your Project</a>
 			</div>
 		</section>
 
@@ -766,7 +766,7 @@
 				<p style="font-size: 1.3rem; color: #666; margin-bottom: 40px; max-width: 600px; margin-left: auto; margin-right: auto;">
 					Schedule your complimentary consultation and discover how Home On can bring your vision to life with our faith-driven approach to excellence.
 				</p>
-				<div class="contact-form-container">
+				<div id="form-start" class="contact-form-container">
 					<form name="home-remodeling-leads" method="POST" action="https://getform.io/f/bqoevvob" class="multi-step-form">
 						<input type="hidden" name="form-name" value="home-remodeling-leads">
 						<input type="hidden" name="_subject" value="New Remodeling Lead from Raleigh Landing Page">
@@ -993,6 +993,12 @@
 
 				if (step1) step1.classList.remove('active');
 				if (step2) step2.classList.add('active');
+
+				// Scroll back to top of form
+				const formStart = document.getElementById('form-start');
+				if (formStart) {
+					formStart.scrollIntoView({ behavior: 'smooth', block: 'start' });
+				}
 
 				console.log('Step transition completed');
 			}
