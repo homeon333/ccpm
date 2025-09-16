@@ -55,14 +55,18 @@
 			window.dataLayer = window.dataLayer || [];
 			function gtag(){dataLayer.push(arguments);}
 			gtag('js', new Date());
-			gtag('config', 'G-28PY8WFRG7', {
-				// Enhanced lead tracking for contractors
-				custom_map: {
-					'custom_parameter_1': 'project_type',
-					'custom_parameter_2': 'budget_range',
-					'custom_parameter_3': 'timeline'
-				}
-			});
+			try {
+				gtag('config', 'G-28PY8WFRG7', {
+					// Enhanced lead tracking for contractors
+					custom_map: {
+						'custom_parameter_1': 'project_type',
+						'custom_parameter_2': 'budget_range',
+						'custom_parameter_3': 'timeline'
+					}
+				});
+			} catch (e) {
+				console.log('GA4 config error:', e);
+			}
 		</script>
 		<style>
 			@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
@@ -886,64 +890,92 @@
 		</section>
 
 		<!-- Calendly Integration -->
-		<script type="text/javascript" src="https://assets.calendly.com/assets/external/widget.js" async></script>
+		<script type="text/javascript" src="https://assets.calendly.com/assets/external/widget.js" async onerror="console.log('Calendly script failed to load')"></script>
 
 		<script>
 			// Handle form submission
 			document.addEventListener('DOMContentLoaded', function() {
-				const form = document.querySelector('.multi-step-form');
-				if (form) {
-					form.addEventListener('submit', function(e) {
-						console.log('Form submitted');
+				try {
+					const form = document.querySelector('.multi-step-form');
+					if (form) {
+						form.addEventListener('submit', function(e) {
+							console.log('Form submitted');
 
-						// Show loading state
-						const submitBtn = document.querySelector('.submit-btn');
-						if (submitBtn) {
-							submitBtn.innerHTML = 'Sending...';
-							submitBtn.disabled = true;
-						}
+							// Show loading state
+							const submitBtn = document.querySelector('.submit-btn');
+							if (submitBtn) {
+								submitBtn.innerHTML = 'Sending...';
+								submitBtn.disabled = true;
+							}
 
-						// Track form submission in GA4
-						if (typeof gtag !== 'undefined') {
-							gtag('event', 'form_submitted', {
-								event_category: 'Lead Generation',
-								event_label: 'Contact Form Completed',
-								value: 1
-							});
-						}
-					});
+							// Track form submission in GA4
+							try {
+								if (typeof gtag !== 'undefined') {
+									gtag('event', 'form_submitted', {
+										event_category: 'Lead Generation',
+										event_label: 'Contact Form Completed',
+										value: 1
+									});
+								}
+							} catch (e) {
+								console.log('GA4 tracking error:', e);
+							}
+						});
+					}
+				} catch (e) {
+					console.log('Form submission handler error:', e);
 				}
 			});
 
 			function nextStep() {
+				console.log('nextStep function called');
+
 				// Validate required fields in step 1
 				const projectType = document.querySelector('input[name="project-type"]:checked');
 				const timeline = document.getElementById('timeline');
+
+				console.log('Project type:', projectType);
+				console.log('Timeline:', timeline);
+				console.log('Timeline value:', timeline ? timeline.value : 'timeline not found');
 
 				if (!projectType) {
 					alert('Please select a project type before continuing.');
 					return;
 				}
 
-				if (!timeline.value) {
+				if (!timeline || !timeline.value) {
 					alert('Please select your timeline before continuing.');
-					timeline.focus();
+					if (timeline) timeline.focus();
 					return;
 				}
 
+				console.log('Validation passed, switching to step 2');
+
 				// Track step progression in GA4
-				if (typeof gtag !== 'undefined') {
-					gtag('event', 'form_step_completed', {
-						event_category: 'Lead Generation',
-						event_label: 'Step 1 - Project Selection',
-						project_type: projectType.value,
-						timeline: timeline.value
-					});
+				try {
+					if (typeof gtag !== 'undefined') {
+						gtag('event', 'form_step_completed', {
+							event_category: 'Lead Generation',
+							event_label: 'Step 1 - Project Selection',
+							project_type: projectType.value,
+							timeline: timeline.value
+						});
+					}
+				} catch (e) {
+					console.log('GA4 step tracking error:', e);
 				}
 
 				// Hide step 1 and show step 2
-				document.getElementById('step1').classList.remove('active');
-				document.getElementById('step2').classList.add('active');
+				const step1 = document.getElementById('step1');
+				const step2 = document.getElementById('step2');
+
+				console.log('Step 1 element:', step1);
+				console.log('Step 2 element:', step2);
+
+				if (step1) step1.classList.remove('active');
+				if (step2) step2.classList.add('active');
+
+				console.log('Step transition completed');
 			}
 
 			function prevStep() {
@@ -953,100 +985,38 @@
 			}
 
 			function openCalendly() {
+				console.log('openCalendly function called');
+
 				// Track Calendly click
-				if (typeof gtag !== 'undefined') {
-					gtag('event', 'calendly_opened', {
-						event_category: 'Lead Generation',
-						event_label: 'Direct Scheduling',
-						value: 1
-					});
+				try {
+					if (typeof gtag !== 'undefined') {
+						gtag('event', 'calendly_opened', {
+							event_category: 'Lead Generation',
+							event_label: 'Direct Scheduling',
+							value: 1
+						});
+					}
+				} catch (e) {
+					console.log('GA4 calendly tracking error:', e);
 				}
 
-				// Open Calendly popup - Replace with your actual Calendly URL
-				Calendly.initPopupWidget({
-					url: 'https://calendly.com/homeon/meet-with-brian-clone'
-				});
+				// Open Calendly popup
+				try {
+					if (typeof Calendly !== 'undefined') {
+						Calendly.initPopupWidget({
+							url: 'https://calendly.com/homeon/meet-with-brian-clone'
+						});
+					} else {
+						console.log('Calendly widget not loaded');
+						// Fallback: open in new window
+						window.open('https://calendly.com/homeon/meet-with-brian-clone', '_blank');
+					}
+				} catch (e) {
+					console.log('Calendly popup error:', e);
+					// Fallback: open in new window
+					window.open('https://calendly.com/homeon/meet-with-brian-clone', '_blank');
+				}
 			}
-
-			// Enhanced form submission tracking
-			document.querySelector('.multi-step-form').addEventListener('submit', function(e) {
-				const formData = new FormData(e.target);
-				const projectType = formData.get('project-type');
-				const budget = formData.get('budget');
-				const timeline = formData.get('timeline');
-				const name = formData.get('name');
-				const email = formData.get('email');
-
-				// Track form submission with lead details
-				if (typeof gtag !== 'undefined') {
-					gtag('event', 'generate_lead', {
-						event_category: 'Lead Generation',
-						event_label: 'Form Submission',
-						currency: 'USD',
-						value: budget === '$300K+' ? 300000 :
-								budget === '$150K - $300K' ? 225000 :
-								budget === '$75K - $150K' ? 112500 :
-								budget === '$40K - $75K' ? 57500 : 50000,
-						project_type: projectType,
-						budget_range: budget,
-						timeline: timeline,
-						user_id: email
-					});
-
-					// Track as conversion
-					gtag('event', 'conversion', {
-						send_to: 'G-28PY8WFRG7/CONVERSION_LABEL'
-					});
-				}
-
-				console.log('Lead captured:', {
-					name: name,
-					email: email,
-					project: projectType,
-					budget: budget,
-					timeline: timeline
-				});
-			});
-
-			// Track page views and engagement
-			document.addEventListener('DOMContentLoaded', function() {
-				// Track initial page view
-				if (typeof gtag !== 'undefined') {
-					gtag('event', 'page_view', {
-						page_title: 'Home Remodeling Landing Page',
-						page_location: window.location.href,
-						content_group1: 'Home Remodeling',
-						content_group2: 'Raleigh NC'
-					});
-				}
-
-				// Track button clicks
-				const ctaButtons = document.querySelectorAll('.cta-button');
-				ctaButtons.forEach(button => {
-					button.addEventListener('click', function() {
-						if (typeof gtag !== 'undefined') {
-							gtag('event', 'cta_click', {
-								event_category: 'Engagement',
-								event_label: this.textContent.trim()
-							});
-						}
-					});
-				});
-
-				// Track service card interactions
-				const serviceCards = document.querySelectorAll('.service-card');
-				serviceCards.forEach(card => {
-					card.addEventListener('click', function() {
-						const serviceName = this.querySelector('h3').textContent;
-						if (typeof gtag !== 'undefined') {
-							gtag('event', 'service_interest', {
-								event_category: 'Service Interest',
-								event_label: serviceName
-							});
-						}
-					});
-				});
-			});
 		</script>
 	</body>
 </html>
