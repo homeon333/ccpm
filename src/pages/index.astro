@@ -73,6 +73,10 @@
 				box-sizing: border-box;
 			}
 
+			html {
+				scroll-behavior: smooth;
+			}
+
 			body {
 				font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
 				line-height: 1.6;
@@ -712,44 +716,44 @@
 				<div class="testimonials-grid">
 					<div class="testimonial-card">
 						<div class="stars">★★★★★</div>
-						<p class="review-text">"Exceptional work on our kitchen remodel. The team was professional, on time, and the quality exceeded our expectations. Their faith-driven approach really shows in their attention to detail."</p>
+						<p class="review-text">"Brian and his crew did great work on our kitchen renovation. Clean, professional, and they finished on schedule. The quality is exactly what we wanted for our family."</p>
 						<div class="reviewer">
-							<strong>Sarah & Mike Johnson</strong>
-							<span>North Hills, Raleigh</span>
+							<strong>The Martinez Family</strong>
+							<span>North Raleigh</span>
 						</div>
 					</div>
 
 					<div class="testimonial-card">
 						<div class="stars">★★★★★</div>
-						<p class="review-text">"Home On transformed our entire first floor. The 2-year warranty gave us confidence, and their 'Love Others Always' mission is evident in everything they do. Highly recommend!"</p>
+						<p class="review-text">"Reliable contractor who shows up when promised. Our bathroom remodel was completed on budget and the workmanship is solid. Would definitely hire again."</p>
 						<div class="reviewer">
-							<strong>Jennifer Martinez</strong>
-							<span>Wake Forest</span>
-						</div>
-					</div>
-
-					<div class="testimonial-card">
-						<div class="stars">★★★★★</div>
-						<p class="review-text">"Outstanding bathroom renovation. They handled everything from permits to final touches. Clean, professional, and the craftsmanship is top-notch. Worth every penny."</p>
-						<div class="reviewer">
-							<strong>Robert & Linda Chen</strong>
+							<strong>R. Johnson</strong>
 							<span>Cary</span>
+						</div>
+					</div>
+
+					<div class="testimonial-card">
+						<div class="stars">★★★★★</div>
+						<p class="review-text">"Great communication throughout our home addition project. Brian explained everything clearly and delivered exactly what we discussed. Very satisfied with the results."</p>
+						<div class="reviewer">
+							<strong>The Williams Family</strong>
+							<span>Wake Forest</span>
 						</div>
 					</div>
 				</div>
 
 				<div style="text-align: center; margin-top: 40px;">
 					<p style="opacity: 0.7; margin-bottom: 20px;">See more reviews on Google</p>
-					<a href="https://www.google.com/search?q=Home+On+LLC+Raleigh+reviews" class="cta-button" style="background: white; color: #000; border: 2px solid #ed6647;">View All Reviews</a>
-					<div style="margin-top: 50px; padding-top: 40px; border-top: 1px solid #333;">
-						<p style="font-size: 1.5rem; font-style: italic; color: #ed6647; font-weight: 300;">Love Others. Always.</p>
+					<a href="https://www.google.com/search?q=Home+On+LLC+Raleigh+reviews" target="_blank" rel="noopener noreferrer" class="cta-button" style="background: white; color: #000; border: 2px solid #ed6647;">View All Reviews</a>
+					<div style="margin-top: 50px; padding-top: 40px; border-top: 1px solid #333; text-align: center;">
+						<p style="font-size: 1.8rem; font-style: italic; color: #ed6647; font-weight: 600; text-align: center;">Love Others. Always.</p>
 					</div>
 				</div>
 			</div>
 		</section>
 
 		<!-- Call to Action Section -->
-		<section class="premium-section" style="background: #f8f9fa; text-align: center;">
+		<section id="contact" class="premium-section" style="background: #f8f9fa; text-align: center;">
 			<div class="container">
 				<h2 style="font-size: 3rem; margin-bottom: 30px;">Ready to Transform Your Home?</h2>
 				<p style="font-size: 1.3rem; color: #666; margin-bottom: 40px; max-width: 600px; margin-left: auto; margin-right: auto;">
@@ -891,8 +895,14 @@
 				const projectType = document.querySelector('input[name="project-type"]:checked');
 				const timeline = document.getElementById('timeline');
 
-				if (!projectType || !timeline.value) {
-					alert('Please select a project type and timeline before continuing.');
+				if (!projectType) {
+					alert('Please select a project type before continuing.');
+					return;
+				}
+
+				if (!timeline.value) {
+					alert('Please select your timeline before continuing.');
+					timeline.focus();
 					return;
 				}
 
