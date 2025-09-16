@@ -893,8 +893,32 @@
 		<script type="text/javascript" src="https://assets.calendly.com/assets/external/widget.js" async onerror="console.log('Calendly script failed to load')"></script>
 
 		<script>
+			// Test function availability immediately
+			console.log('Script loading...');
+
 			// Handle form submission
 			document.addEventListener('DOMContentLoaded', function() {
+				console.log('DOM loaded');
+
+				// Test if nextStep function is available
+				console.log('nextStep function type:', typeof window.nextStep);
+
+				// Add backup event listener to the continue button
+				const continueBtn = document.querySelector('.next-step-btn');
+				console.log('Continue button found:', continueBtn);
+
+				if (continueBtn) {
+					continueBtn.addEventListener('click', function(e) {
+						console.log('Button clicked via event listener');
+						e.preventDefault();
+						if (typeof window.nextStep === 'function') {
+							window.nextStep();
+						} else {
+							console.log('nextStep function not available, calling directly');
+							nextStep();
+						}
+					});
+				}
 				try {
 					const form = document.querySelector('.multi-step-form');
 					if (form) {
@@ -977,6 +1001,10 @@
 
 				console.log('Step transition completed');
 			}
+
+			// Make function globally available
+			window.nextStep = nextStep;
+			console.log('nextStep function defined globally');
 
 			function prevStep() {
 				// Hide step 2 and show step 1
