@@ -1,0 +1,14 @@
+# Cloudflare Pages Redirects Configuration
+# Map subdirectory structure to Pages deployment
+
+# Main subdirectory redirect - preserve query parameters
+/raleigh/* https://a9de6306.home-on-raleigh.pages.dev/:splat 200
+/raleigh https://a9de6306.home-on-raleigh.pages.dev/ 200
+
+# Future location redirects (template for scaling)
+# /durham/* https://durham-landing.pages.dev/:splat 200
+# /chapel-hill/* https://chapel-hill-landing.pages.dev/:splat 200
+# /charlotte/* https://charlotte-landing.pages.dev/:splat 200
+
+# Fallback for direct access
+/* https://a9de6306.home-on-raleigh.pages.dev/:splat 200
