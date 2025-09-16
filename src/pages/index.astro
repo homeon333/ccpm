@@ -760,9 +760,8 @@
 					Schedule your complimentary consultation and discover how Home On can bring your vision to life with our faith-driven approach to excellence.
 				</p>
 				<div class="contact-form-container">
-					<form name="home-remodeling-leads" method="POST" action="https://formspree.io/f/xdkogkvo" class="multi-step-form">
+					<form name="home-remodeling-leads" method="POST" action="https://getform.io/f/bvrekmzb" class="multi-step-form">
 						<input type="hidden" name="_subject" value="New Remodeling Lead from Raleigh Landing Page">
-						<input type="hidden" name="_cc" value="info@homeonpro.com">
 						<input type="hidden" name="_next" value="https://homeon.online/raleigh?success=true">
 						<input type="hidden" name="form-name" value="home-remodeling-leads">
 
@@ -890,6 +889,32 @@
 		<script type="text/javascript" src="https://assets.calendly.com/assets/external/widget.js" async></script>
 
 		<script>
+			// Handle form submission
+			document.addEventListener('DOMContentLoaded', function() {
+				const form = document.querySelector('.multi-step-form');
+				if (form) {
+					form.addEventListener('submit', function(e) {
+						console.log('Form submitted');
+
+						// Show loading state
+						const submitBtn = document.querySelector('.submit-btn');
+						if (submitBtn) {
+							submitBtn.innerHTML = 'Sending...';
+							submitBtn.disabled = true;
+						}
+
+						// Track form submission in GA4
+						if (typeof gtag !== 'undefined') {
+							gtag('event', 'form_submitted', {
+								event_category: 'Lead Generation',
+								event_label: 'Contact Form Completed',
+								value: 1
+							});
+						}
+					});
+				}
+			});
+
 			function nextStep() {
 				// Validate required fields in step 1
 				const projectType = document.querySelector('input[name="project-type"]:checked');
